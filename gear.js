@@ -38,14 +38,14 @@ function main() {
       
       v_color = vec4(a_color, 1.0);
       
-      vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+      vec3 ambientLight = vec3(0.5, 0.5, 0.5);
       vec3 directionalLightColor = vec3(1, 1, 1);
-      vec3 directionalVector = normalize(vec3(0.0, 0.0, 1));
+      vec3 directionalVector = normalize(vec3(0.5, 0.5, -1));
       
       vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
       
       float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-      v_lighting = ambientLight + (directionalLightColor * directional);
+      v_lighting = ambientLight + (0.5 * directionalLightColor * directional);
     }
   `;
 

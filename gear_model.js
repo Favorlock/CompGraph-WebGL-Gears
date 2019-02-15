@@ -23,9 +23,9 @@ function createGear() {
             rad * Math.cos(ang), rad * Math.sin(ang), z,
             rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z)
 
-        colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
 
-        normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
+        normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
 
         ang += angInc;
     }
@@ -38,9 +38,9 @@ function createGear() {
             rad * Math.cos(ang), rad * Math.sin(ang), -z,
             rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z)
 
-        colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
 
-        normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+        normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
 
         ang += angInc;
     }
@@ -58,12 +58,12 @@ function createGear() {
                     rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z,
                     outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
 
-                colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+                colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
 
                 if (z > 0) {
-                    normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
-                } else {
                     normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+                } else {
+                    normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
                 }
 
                 vertices.push(rad * Math.cos(ang), rad * Math.sin(ang), z,
@@ -71,12 +71,12 @@ function createGear() {
                     outRad * Math.cos(ang), outRad * Math.sin(ang), z);
 
 
-                colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+                colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
 
                 if (z > 0) {
-                    normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
-                } else {
                     normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+                } else {
+                    normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
                 }
             }
             ang += angInc;
@@ -91,7 +91,7 @@ function createGear() {
     var drawTooth = true;
     for (i = 0; i < n; i++) {
         drawTooth = !drawTooth;
-        var norm = [-rad * Math.cos(ang + angInc / 2), -rad * Math.sin(ang + angInc / 2), 0];
+        var norm = [rad * Math.cos(ang + angInc / 2), rad * Math.sin(ang + angInc / 2), 0];
         if (drawTooth) {
 
             vertices.push(
@@ -99,7 +99,7 @@ function createGear() {
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z)
 
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
             vertices.push(
@@ -107,7 +107,7 @@ function createGear() {
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z,
                 rad * Math.cos(ang), rad * Math.sin(ang), z)
 
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
         }
 
@@ -121,13 +121,13 @@ function createGear() {
         drawTooth = !drawTooth;
         if (drawTooth) {
 
-            var norm = [-outRad * Math.cos(ang + angInc / 2), -outRad * Math.sin(ang + angInc / 2), 0];
+            var norm = [outRad * Math.cos(ang + angInc / 2), outRad * Math.sin(ang + angInc / 2), 0];
             vertices.push(
                 outRad * Math.cos(ang), outRad * Math.sin(ang), -z,
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z,
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
 
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
             vertices.push(
@@ -135,7 +135,7 @@ function createGear() {
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z,
                 outRad * Math.cos(ang), outRad * Math.sin(ang), z)
 
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
         }
@@ -161,16 +161,16 @@ function createGear() {
                 rad * Math.cos(ang), rad * Math.sin(ang), -z,
                 outRad * Math.cos(ang), outRad * Math.sin(ang), -z,
                 outRad * Math.cos(ang), outRad * Math.sin(ang), z)
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-            normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+            normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
 
 
             vertices.push(
                 rad * Math.cos(ang), rad * Math.sin(ang), -z,
                 outRad * Math.cos(ang), outRad * Math.sin(ang), z,
                 rad * Math.cos(ang), rad * Math.sin(ang), z)
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-            normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+            normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
             console.log(`${norm[0]} ${norm[1]} ${norm[2]}`)
 
             v1 = vector.create(rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
@@ -184,16 +184,16 @@ function createGear() {
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z,
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-            normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+            normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
 
             vertices.push(
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
                 outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z,
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z)
-            colors.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-            normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+            normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
             console.log(`${norm[0]} ${norm[1]} ${norm[2]}`)
 
         }
