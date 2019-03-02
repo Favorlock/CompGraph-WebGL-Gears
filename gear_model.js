@@ -16,6 +16,7 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
     var outRad = rad * 1.2;
     var angInc = 2 * 3.14159 / n;
     var ang = 0;
+    var spokeAngInc = 2 * 3.14159 / numSpokes;
     var z = 0.1;
 
     var i;       //  coin face, front
@@ -259,6 +260,63 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
         ang += angInc;
     }
 
+    for (r = 0; r < 2; r++) {
+        ang = 0;
+        var drawTooth = false;
+
+        for (i = 0; i < numSpokes; i++) {
+            vertices.push(0, 0, -z,
+                rad * Math.cos(ang), rad * Math.sin(ang), -z,
+                rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+
+            if (z < 0) {
+                normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+            } else {
+                normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
+            }
+
+            ang += spokeAngInc;
+        }
+        z = -z;
+    }
+
+    ang = 0;
+    for (i = 0; i < numSpokes; i++) {
+        let v1 = vector.create(rad * Math.cos(ang), rad * Math.sin(ang), -z);
+        let v2 = vector.create(outRad * Math.cos(ang), outRad * Math.sin(ang), -z);
+        let v3 = vector.create(outRad * Math.cos(ang), outRad * Math.sin(ang), z);
+        let u = vector.create(); vector.subtract(u, v2, v1);
+        let v = vector.create(); vector.subtract(v, v3, v1);
+        let norm = vector.create(); vector.crossProduct(norm, u, v); vector.normalize(norm);
+
+        vertices.push(0, 0, z,
+            0, 0, -z,
+            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]);
+
+        vertices.push(0, 0, z,
+            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z,
+            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]);
+
+        vertices.push(0, 0, z,
+            0, 0, -z,
+            rad * Math.cos(ang), rad * Math.sin(ang), -z);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+        normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2]);
+
+        vertices.push(0, 0, z,
+            rad * Math.cos(ang), rad * Math.sin(ang), z,
+            rad * Math.cos(ang), rad * Math.sin(ang), -z);
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+        normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2]);
+
+        ang += spokeAngInc;
+    }
 
     return [vertices, colors, normals]
 }
