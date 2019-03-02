@@ -20,47 +20,124 @@ function main() {
     // Vertex shader program, runs on GPU, once per vertex
 
     const vsSource = `
-    precision mediump int;
-    precision mediump float;
+// Vertex Shader
+precision mediump int;
+precision mediump float;
 
-    attribute vec3 a_vertex;
-    attribute vec3 a_color;
-    attribute vec3 a_normal;
-  
-    uniform mat4 u_transform;
-    uniform mat4 u_normalMatrix;
-  
-    varying vec4 v_color;
-    varying vec3 v_lighting;
+// Scene transformations
+uniform mat4 u_PVM_transform; // Projection, view, model transform
+uniform mat4 u_VM_transform;  // View, model transform
 
-    void main() {
-      gl_Position = u_transform * vec4(a_vertex, 1.0);
-      
-      v_color = vec4(a_color, 1.0);
-      
-      vec3 ambientLight = vec3(0.5, 0.5, 0.5);
-      vec3 directionalLightColor = vec3(1, 1, 1);
-      vec3 directionalVector = normalize(vec3(0.5, 0.5, -1));
-      
-      vec4 transformedNormal = u_normalMatrix * vec4(a_normal, 1.0);
-      
-      float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-      v_lighting = ambientLight + (0.5 * directionalLightColor * directional);
-    }
+// Light model
+uniform vec3 u_Light_position;
+uniform vec3 u_Light_color;
+uniform float u_Shininess;
+uniform vec3 u_Ambient_color;
+
+// Original model data
+attribute vec3 a_Vertex;
+attribute vec3 a_Color;
+attribute vec3 a_Vertex_normal;
+
+// Data (to be interpolated) that is passed on to the fragment shader
+varying vec3 v_Vertex;
+varying vec4 v_Color;
+varying vec3 v_Normal;
+
+void main() {
+
+  // Perform the model and view transformations on the vertex and pass this
+  // location to the fragment shader.
+  v_Vertex = vec3( u_VM_transform * vec4(a_Vertex, 1.0) );
+
+  // Perform the model and view transformations on the vertex's normal vector
+  // and pass this normal vector to the fragment shader.
+  v_Normal = vec3( u_VM_transform * vec4(a_Vertex_normal, 0.0) );
+
+  // Pass the vertex's color to the fragment shader.
+  v_Color = vec4(a_Color, 1.0);
+
+  // Transform the location of the vertex for the rest of the graphics pipeline
+  gl_Position = u_PVM_transform * vec4(a_Vertex, 1.0);
+}
   `;
 
     // Fragment shader program, runs on GPU, once per potential pixel
 
     const fsSource = `
-    precision mediump int;
-    precision mediump float;
+// Fragment shader program
+precision mediump int;
+precision mediump float;
 
-    varying vec4 v_color;
-    varying vec3 v_lighting;
-    
-    void main() {
-      gl_FragColor = vec4(v_color.rgb * v_lighting, v_color.a);
-    }
+// Light model
+uniform vec3 u_Light_position;
+uniform vec3 u_Light_color;
+uniform float u_Shininess;
+uniform vec3 u_Ambient_color;
+
+// Data coming from the vertex shader
+varying vec3 v_Vertex;
+varying vec4 v_Color;
+varying vec3 v_Normal;
+
+void main() {
+
+  vec3 to_light;
+  vec3 vertex_normal;
+  vec3 reflection;
+  vec3 to_camera;
+  float cos_angle;
+  vec3 diffuse_color;
+  vec3 specular_color;
+  vec3 ambient_color;
+  vec3 color;
+
+  // Calculate the ambient color as a percentage of the surface color
+  ambient_color = u_Ambient_color * vec3(v_Color);
+
+  // Calculate a vector from the fragment location to the light source
+  to_light = u_Light_position - v_Vertex;
+  to_light = normalize( to_light );
+
+  // The vertex's normal vector is being interpolated across the primitive
+  // which can make it un-normalized. So normalize the vertex's normal vector.
+  vertex_normal = normalize( v_Normal );
+
+  // Calculate the cosine of the angle between the vertex's normal vector
+  // and the vector going to the light.
+  cos_angle = dot(vertex_normal, to_light);
+  cos_angle = clamp(cos_angle, 0.0, 1.0);
+
+  // Scale the color of this fragment based on its angle to the light.
+  diffuse_color = vec3(v_Color) * cos_angle;
+
+  // Calculate the reflection vector
+  reflection = 2.0 * dot(vertex_normal,to_light) * vertex_normal - to_light;
+
+  // Calculate a vector from the fragment location to the camera.
+  // The camera is at the origin, so negating the vertex location gives the vector
+  to_camera = -1.0 * v_Vertex;
+
+  // Calculate the cosine of the angle between the reflection vector
+  // and the vector going to the camera.
+  reflection = normalize( reflection );
+  to_camera = normalize( to_camera );
+  cos_angle = dot(reflection, to_camera);
+  cos_angle = clamp(cos_angle, 0.0, 1.0);
+  cos_angle = pow(cos_angle, u_Shininess);
+
+  // The specular color is from the light source, not the object
+  if (cos_angle > 0.0) {
+    specular_color = u_Light_color * cos_angle;
+    diffuse_color = diffuse_color * (1.0 - cos_angle);
+  } else {
+    specular_color = vec3(0.0, 0.0, 0.0);
+  }
+
+  color = ambient_color + diffuse_color + specular_color;
+
+  gl_FragColor = vec4(color, v_Color.a);
+}
   `;
 
     // Initialize a shader program; this is where all
@@ -76,11 +153,15 @@ function main() {
     const programInfo = {
         program: shaderProgram,
         locations: {
-            a_vertex: gl.getAttribLocation(shaderProgram, 'a_vertex'),
-            a_color: gl.getAttribLocation(shaderProgram, 'a_color'),
-            a_normal: gl.getAttribLocation(shaderProgram, 'a_normal'),
-            u_transform: gl.getUniformLocation(shaderProgram, 'u_transform'),
-            u_normalMatrix: gl.getUniformLocation(shaderProgram, 'u_normalMatrix'),
+            a_Vertex: gl.getAttribLocation(shaderProgram, 'a_Vertex'),
+            a_Color: gl.getAttribLocation(shaderProgram, 'a_Color'),
+            a_Vertex_normal: gl.getAttribLocation(shaderProgram, 'a_Vertex_normal'),
+            u_VM_transform: gl.getUniformLocation(shaderProgram, 'u_VM_transform'),
+            u_PVM_transform: gl.getUniformLocation(shaderProgram, 'u_PVM_transform'),
+            u_Light_position: gl.getUniformLocation(shaderProgram, 'u_Light_position'),
+            u_Light_color: gl.getUniformLocation(shaderProgram, 'u_Light_position'),
+            u_Shininess: gl.getUniformLocation(shaderProgram, 'u_Shininess'),
+            u_Ambient_color: gl.getUniformLocation(shaderProgram, 'u_Ambient_color')
         },
     };
 
@@ -179,42 +260,42 @@ function enableAttributes(gl, buffers, programInfo) {
 
     // Tell WebGL how to pull vertex positions from the vertex
     // buffer. These positions will be fed into the shader program's
-    // "a_vertex" attribute.
+    // "a_Vertex" attribute.
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.vertex);
     gl.vertexAttribPointer(
-        programInfo.locations.a_vertex,
+        programInfo.locations.a_Vertex,
         numComponents,
         type,
         normalize,
         stride,
         offset);
     gl.enableVertexAttribArray(
-        programInfo.locations.a_vertex);
+        programInfo.locations.a_Vertex);
 
 
-    // likewise connect the colors buffer to the "a_color" attribute
+    // likewise connect the colors buffer to the "a_Color" attribute
     // in the shader program
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
     gl.vertexAttribPointer(
-        programInfo.locations.a_color,
+        programInfo.locations.a_Color,
         numComponents,
         type,
         normalize,
         stride,
         offset);
     gl.enableVertexAttribArray(
-        programInfo.locations.a_color);
+        programInfo.locations.a_Color);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normal);
     gl.vertexAttribPointer(
-        programInfo.locations.a_normal,
+        programInfo.locations.a_Vertex_normal,
         numComponents,
         type,
         normalize,
         stride,
         offset);
-    gl.enableVertexAttribArray(programInfo.locations.a_normal);
+    gl.enableVertexAttribArray(programInfo.locations.a_Vertex_normal);
 
 }
 
@@ -237,29 +318,40 @@ function drawScene(gl, programInfo, buffers, angle_x, angle_y) {
 
     var matrix = new Learn_webgl_matrix();
 
+    var projection = matrix.createPerspective(30.0, 1.0, 0.5, 100.0);
+    var virtual_camera = matrix.create();
+    matrix.lookAt(virtual_camera,
+        0, 0, 5,
+        0, 0, 0,
+        0, 1, 0);
+
+    var vm_transform = matrix.create();
+    var pvm_transform = matrix.create();
+
     var rotate_x_matrix = matrix.create();
     var rotate_y_matrix = matrix.create();
-    var transform = matrix.create();
     var scale = matrix.create();
 
     matrix.scale(scale, 0.8, 0.8, 0.8);
-
     matrix.rotate(rotate_x_matrix, angle_x, 1, 0, 0);
     matrix.rotate(rotate_y_matrix, angle_y, 0, 1, 0);
 
+    matrix.copy(vm_transform, virtual_camera);
+    matrix.multiplySeries(vm_transform, rotate_x_matrix, rotate_y_matrix, scale);
+    matrix.multiplySeries(pvm_transform, projection, virtual_camera, rotate_x_matrix, rotate_y_matrix, scale);
+
     // Combine the two rotations into a single transformation
-    matrix.multiplySeries(transform,
-        rotate_x_matrix, rotate_y_matrix, scale);
-
-    var normalMatrix = matrix.create();
-
-    matrix.inverse(normalMatrix, transform);
-    matrix.transpose(normalMatrix)
+    // matrix.multiplySeries(vm_transform,
+    //     rotate_x_matrix, rotate_y_matrix, scale);
 
     // Set the shader program's uniform
-    gl.uniformMatrix4fv(programInfo.locations.u_transform,
-        false, transform);
-    gl.uniformMatrix4fv(programInfo.locations.u_normalMatrix, false, normalMatrix)
+    gl.uniform3f(programInfo.locations.u_Light_position, 1, 1, -1);
+    gl.uniform3f(programInfo.locations.u_Light_color, 1.0, 1.0, 1.0);
+    gl.uniform1f(programInfo.locations.u_Shininess, 90.0);
+    gl.uniform3f(programInfo.locations.u_Ambient_color, 0.5, 0.5, 0.5);
+
+    gl.uniformMatrix4fv(programInfo.locations.u_VM_transform, false, vm_transform);
+    gl.uniformMatrix4fv(programInfo.locations.u_PVM_transform, false, pvm_transform);
 
     { // now tell the shader (GPU program) to draw some triangles
         const offset = 0;
