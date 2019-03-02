@@ -1,6 +1,6 @@
 //  build the object, including geometry (triangle vertices)
 //  and possibly colors and normals for each vertex
-function createGear() {
+function evandlGear(numTeeth = 40) {
     const vertices = [];
     const colors = [];
     const normals = [];
@@ -9,7 +9,7 @@ function createGear() {
 ////////////////////////////
 // Making gear triangles
 
-    var n = 40;
+    var n = numTeeth * 2;
     var rad = 1.0;
     var outRad = rad * 1.2;
     var angInc = 2 * 3.14159 / n;
