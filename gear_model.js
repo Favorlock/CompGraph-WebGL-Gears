@@ -61,12 +61,13 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
                 normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
             }
 
+            // Tooth face
             drawTooth = !drawTooth;
             if (drawTooth) {
 
                 vertices.push(rad * Math.cos(ang), rad * Math.sin(ang), z,
                     rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z,
-                    outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
+                    outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2)
 
                 colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
 
@@ -77,8 +78,8 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
                 }
 
                 vertices.push(rad * Math.cos(ang), rad * Math.sin(ang), z,
-                    outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z,
-                    outRad * Math.cos(ang), outRad * Math.sin(ang), z);
+                    outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2,
+                    outRad * Math.cos(ang), outRad * Math.sin(ang), z / 2);
 
 
                 colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
@@ -180,17 +181,17 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
 
             var norm = [outRad * Math.cos(ang + angInc / 2), outRad * Math.sin(ang + angInc / 2), 0];
             vertices.push(
-                outRad * Math.cos(ang), outRad * Math.sin(ang), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
+                outRad * Math.cos(ang), outRad * Math.sin(ang), -z / 2,
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z / 2,
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2)
 
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
             vertices.push(
-                outRad * Math.cos(ang), outRad * Math.sin(ang), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z,
-                outRad * Math.cos(ang), outRad * Math.sin(ang), z)
+                outRad * Math.cos(ang), outRad * Math.sin(ang), -z / 2,
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2,
+                outRad * Math.cos(ang), outRad * Math.sin(ang), z / 2)
 
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
@@ -217,15 +218,15 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
 
             vertices.push(
                 rad * Math.cos(ang), rad * Math.sin(ang), -z,
-                outRad * Math.cos(ang), outRad * Math.sin(ang), -z,
-                outRad * Math.cos(ang), outRad * Math.sin(ang), z)
+                outRad * Math.cos(ang), outRad * Math.sin(ang), -z / 2,
+                outRad * Math.cos(ang), outRad * Math.sin(ang), z / 2)
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
 
 
             vertices.push(
                 rad * Math.cos(ang), rad * Math.sin(ang), -z,
-                outRad * Math.cos(ang), outRad * Math.sin(ang), z,
+                outRad * Math.cos(ang), outRad * Math.sin(ang), z / 2,
                 rad * Math.cos(ang), rad * Math.sin(ang), z)
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(-norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2], -norm[0], -norm[1], -norm[2])
@@ -240,15 +241,15 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
 
             vertices.push(
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z)
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), -z / 2,
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2)
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
 
 
             vertices.push(
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
-                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z,
+                outRad * Math.cos(ang + angInc), outRad * Math.sin(ang + angInc), z / 2,
                 rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z)
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
             normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
