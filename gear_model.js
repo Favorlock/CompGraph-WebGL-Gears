@@ -1,6 +1,6 @@
 //  build the object, including geometry (triangle vertices)
 //  and possibly colors and normals for each vertex
-function evandlGear(numTeeth = 40) {
+function evandlGear(numTeeth = 40, numSpokes = 4) {
     const vertices = [];
     const colors = [];
     const normals = [];
@@ -10,6 +10,8 @@ function evandlGear(numTeeth = 40) {
 // Making gear triangles
 
     var n = numTeeth * 2;
+    var innerRad = 0.3;
+    var innerRad2 = 0.85
     var rad = 1.0;
     var outRad = rad * 1.2;
     var angInc = 2 * 3.14159 / n;
@@ -17,40 +19,48 @@ function evandlGear(numTeeth = 40) {
     var z = 0.1;
 
     var i;       //  coin face, front
-    for (i = 0; i < n; i++) {
-
-        vertices.push(0, 0, z,
-            rad * Math.cos(ang), rad * Math.sin(ang), z,
-            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z)
-
-        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
-
-        normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
-
-        ang += angInc;
-    }
-
-
-    ang = 0;   // coin face, back
-    for (i = 0; i < n; i++) {
-
-        vertices.push(0, 0, -z,
-            rad * Math.cos(ang), rad * Math.sin(ang), -z,
-            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z)
-
-        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
-
-        normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
-
-        ang += angInc;
-    }
-
     var r;
     for (r = 0; r < 2; r++) {
         ang = 0;
         var drawTooth = false;
 
-        for (i = 0; i < n; i++) {       // face of the teeth
+        for (i = 0; i < n; i++) {
+            vertices.push(0, 0, -z,
+                innerRad * Math.cos(ang), innerRad * Math.sin(ang), -z,
+                innerRad * Math.cos(ang + angInc), innerRad * Math.sin(ang + angInc), -z)
+
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+
+            if (z < 0) {
+                normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+            } else {
+                normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
+            }
+
+            vertices.push(innerRad2 * Math.cos(ang), innerRad2 * Math.sin(ang), -z,
+                innerRad2 * Math.cos(ang + angInc), innerRad2 * Math.sin(ang + angInc), -z,
+                rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z)
+
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+
+            if (z < 0) {
+                normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+            } else {
+                normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
+            }
+
+            vertices.push(innerRad2 * Math.cos(ang), innerRad2 * Math.sin(ang), -z,
+                rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z,
+                rad * Math.cos(ang), rad * Math.sin(ang), -z)
+
+            colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
+
+            if (z < 0) {
+                normals.push(0, 0, 1, 0, 0, 1, 0, 0, 1);
+            } else {
+                normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
+            }
+
             drawTooth = !drawTooth;
             if (drawTooth) {
 
@@ -79,6 +89,7 @@ function evandlGear(numTeeth = 40) {
                     normals.push(0, 0, -1, 0, 0, -1, 0, 0, -1);
                 }
             }
+
             ang += angInc;
         }
         z = -z;
@@ -86,9 +97,9 @@ function evandlGear(numTeeth = 40) {
 
     z = -z;
 
-
+    // Outer coin tops
     ang = 0;
-    var drawTooth = true;
+    drawTooth = true;
     for (i = 0; i < n; i++) {
         drawTooth = !drawTooth;
         var norm = [rad * Math.cos(ang + angInc / 2), rad * Math.sin(ang + angInc / 2), 0];
@@ -114,7 +125,53 @@ function evandlGear(numTeeth = 40) {
         ang += angInc;
     }
 
+    // Inner coin tops
+    ang = 0;
+    for (i = 0; i < n; i++) {
+        var norm = [innerRad * Math.cos(ang + angInc / 2), innerRad * Math.sin(ang + angInc / 2), 0];
+        vertices.push(
+            innerRad * Math.cos(ang), innerRad * Math.sin(ang), -z,
+            innerRad * Math.cos(ang + angInc), innerRad * Math.sin(ang + angInc), -z,
+            innerRad * Math.cos(ang + angInc), innerRad * Math.sin(ang + angInc), z)
 
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+
+        vertices.push(
+            innerRad * Math.cos(ang), innerRad * Math.sin(ang), -z,
+            innerRad * Math.cos(ang + angInc), innerRad * Math.sin(ang + angInc), z,
+            innerRad * Math.cos(ang), innerRad * Math.sin(ang), z)
+
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+
+        ang += angInc;
+    }
+
+    // Inner coin bottoms
+    ang = 0;
+    for (i = 0; i < n; i++) {
+        var norm = [innerRad2 * -Math.cos(ang + angInc / 2), innerRad2 * -Math.sin(ang + angInc / 2), 0];
+        vertices.push(
+            innerRad2 * Math.cos(ang), innerRad2 * Math.sin(ang), -z,
+            innerRad2 * Math.cos(ang + angInc), innerRad2 * Math.sin(ang + angInc), -z,
+            innerRad2 * Math.cos(ang + angInc), innerRad2 * Math.sin(ang + angInc), z)
+
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+
+        vertices.push(
+            innerRad2 * Math.cos(ang), innerRad2 * Math.sin(ang), -z,
+            innerRad2 * Math.cos(ang + angInc), innerRad2 * Math.sin(ang + angInc), z,
+            innerRad2 * Math.cos(ang), innerRad2 * Math.sin(ang), z)
+
+        colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157)
+        normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2])
+
+        ang += angInc;
+    }
+
+    // Tooth tops
     ang = 0;
     drawTooth = false;
     for (i = 0; i < n; i++) {
@@ -146,6 +203,7 @@ function evandlGear(numTeeth = 40) {
 
     let vector = new Learn_webgl_vector3();
 
+    // Tooth sides
     drawTooth = false;
     for (i = 0; i < n; i++) {
         drawTooth = !drawTooth;
