@@ -121,7 +121,7 @@ function main() {
 //
 function initBuffers(gl, programInfo) {
 
-    const gearData = evandlGear(20);
+    const gearData = evandlGear(40, 4, .2);
     const vertices = gearData[0];
     const colors = gearData[1];
     const normals = gearData[2];

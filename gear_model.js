@@ -1,6 +1,7 @@
 //  build the object, including geometry (triangle vertices)
 //  and possibly colors and normals for each vertex
-function evandlGear(numTeeth = 40, numSpokes = 4) {
+// You can specify the number of teeth, spokes, and the spoke angle.
+function evandlGear(numTeeth = 40, numSpokes = 4, spokeAng = 2 / numSpokes) {
     const vertices = [];
     const colors = [];
     const normals = [];
@@ -267,7 +268,7 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
         for (i = 0; i < numSpokes; i++) {
             vertices.push(0, 0, -z,
                 rad * Math.cos(ang), rad * Math.sin(ang), -z,
-                rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+                rad * Math.cos(ang + spokeAng), rad * Math.sin(ang + spokeAng), -z);
 
             colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
 
@@ -293,13 +294,13 @@ function evandlGear(numTeeth = 40, numSpokes = 4) {
 
         vertices.push(0, 0, z,
             0, 0, -z,
-            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+            rad * Math.cos(ang + spokeAng), rad * Math.sin(ang + spokeAng), -z);
         colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
         normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]);
 
         vertices.push(0, 0, z,
-            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), z,
-            rad * Math.cos(ang + angInc), rad * Math.sin(ang + angInc), -z);
+            rad * Math.cos(ang + spokeAng), rad * Math.sin(ang + spokeAng), z,
+            rad * Math.cos(ang + spokeAng), rad * Math.sin(ang + spokeAng), -z);
         colors.push(0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157, 0.8314, 0.6863, 0.2157);
         normals.push(norm[0], norm[1], norm[2], norm[0], norm[1], norm[2], norm[0], norm[1], norm[2]);
 
